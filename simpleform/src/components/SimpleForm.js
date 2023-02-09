@@ -1,6 +1,6 @@
-import React from 'react';
-
-import { useFormik } from 'formik';
+import React from 'react'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
 const initialValues = {
   name: 'cp',
   email: '',
@@ -9,7 +9,7 @@ const initialValues = {
 const onSubmit = values => {
   console.log('Form data', values)
 }
-
+//validation using Yup
 const validate = values => {
   let errors = {}
 
@@ -29,10 +29,18 @@ const validate = values => {
 
           return errors
 }
+const validationSchema = Yup.object({
+  name:Yup.string().required('Required!!'),
+  email:Yup.string()
+    .email('Invalid email format!')
+    .required('Required!!'),
+  city: Yup.string().required('Required!!!')
+})
 function SimpleForm() {
     const formik = useFormik({
       initialValues,
       onSubmit,
+      validationSchema,
       validate
     })
     console.log('visited fields', formik.touched)
@@ -47,7 +55,7 @@ function SimpleForm() {
         onChange={formik.handleChange} 
         onBlur={formik.handleBlur}
         value={formik.values.name}/>
-        {formik.errors.name ? <div className='error'>{formik.errors.name}</div> : null}
+        {formik.touched.name && formik.errors.name ? <div className='error'>{formik.errors.name}</div> : null}
         </div>
         
 
@@ -59,7 +67,7 @@ function SimpleForm() {
         onChange={formik.handleChange} 
         onBlur={formik.handleBlur}
         value={formik.values.email}/>
-        {formik.errors.email ? <div className='error'>{formik.errors.email}</div> : null}
+        {formik.touched.email && formik.errors.email ? <div className='error'>{formik.errors.email}</div> : null}
           </div>
         <div className='form-control'>
         <label htmlFor='city'>City</label>
@@ -68,7 +76,7 @@ function SimpleForm() {
         onChange={formik.handleChange} 
         onBlur={formik.handleBlur}
         value={formik.values.city}/>
-        {formik.errors.city ? <div className='error'>{formik.errors.city}</div> : null}
+        {formik.touched.city && formik.errors.city ? <div className='error'>{formik.errors.city}</div> : null}
 
         </div>
         <button type='submit'>Submit</button>
